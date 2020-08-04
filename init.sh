@@ -39,3 +39,8 @@ VOLUME=$(isoinfo -d -i $ISO1 | grep "Volume id" | sed -e 's/Volume id: //')
 echo $VOLUME
  
 sed -i 's/{{VOLUME}}/'$VOLUME'/' $BUILD/isolinux/isolinux.cfg
+
+mkisofs -J -T -o $ISO2 -b isolinux/isolinux.bin \
+-c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table \
+-R -m TRANS.TBL -graft-points -V "$VOLUME" \
+$BUILD
