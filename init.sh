@@ -9,6 +9,8 @@ dnf install epel-release -y
 dnf install ntfs-3g -y
 dnf install wget -y
 
+dnf install genisoimage -y
+
 #Download linux
 if [ ! -f "$ISO1" ]; then	
     echo "$ISO1 does not exists. Dowload..."
