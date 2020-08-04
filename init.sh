@@ -29,4 +29,13 @@ mkdir $BUILD/
 shopt -s dotglob
 
 cp -avRf /mnt/* $BUILD/
+umount /mnt/
 
+#Copy settings
+rsync -avh src/iso/* iso/
+
+VOLUME=$(isoinfo -d -i $ISO1 | grep "Volume id" | sed -e 's/Volume id: //')
+
+echo $VOLUME
+ 
+sed -i 's/{{VOLUME}}/'$VOLUME'/' $BUILD/isolinux/isolinux.cfg
