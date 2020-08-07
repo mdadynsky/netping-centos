@@ -31,21 +31,13 @@ rpm -Uvh /netping/zabbix/*.rpm
 systemctl start mariadb
 systemctl enable mariadb
 
-exit 0
-#MariaDB
-tar -C /opt/mariadb -xf /netping/rpm/mariadb/mariadb.tar.gz
-ln -s /opt/mariadb/mariadb-10.5.4-linux-x86_64 /opt/mariadb/mysql
+cp -r /netping/usr/* /usr/
 
-groupadd mysql
-useradd -g mysql mysql
-chown -R mysql:mysql /opt/mariadb/mysql/
+firewall-cmd --permanent --add-service=http
+firewall-cmd --permanent --add-service=https
+firewall-cmd --reload
 
-cp /netping/rpm/mariadb/my.cnf /etc/my.cnf
-mkdir -p /var/lib/mysql
-
-/opt/mariadb/mysql/scripts/mysql_install_db --user=mysql --basedir=/opt/mariadb/mysql
-
-ln -s /opt/mariadb/mysql/support-files/mysql.server /etc/init.d/mysql
-update-rc.d mysql defaults
+systemctl start httpd
+systemctl enable httpd
 
 exit 0 
