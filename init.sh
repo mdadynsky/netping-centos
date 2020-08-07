@@ -12,7 +12,7 @@ dnf install rsync -y
 dnf install genisoimage -y
 
 #Download linux
-if [ ! -f "$ISO1" ]; then	
+if [ ! -f "$ISO1" ]; then
     echo "$ISO1 does not exists. Dowload..."
     wget -O $ISO1 $URL
 else
@@ -31,8 +31,11 @@ shopt -s dotglob
 cp -avRf /mnt/* $BUILD/
 umount /mnt/
 
+
 #Copy settings
 rsync -avh src/iso/* iso/
+
+wget -O $BUILD/netping/rpm/tar.rpm http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/tar-1.30-4.el8.x86_64.rpm
 
 VOLUME=$(isoinfo -d -i $ISO1 | grep "Volume id" | sed -e 's/Volume id: //')
 
