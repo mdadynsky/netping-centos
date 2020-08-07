@@ -28,6 +28,8 @@ cd /netping/rpm
 #Install soft
 rpm -Uvh /netping/zabbix/*.rpm
 
+systemctl start mariadb
+systemctl enable mariadb
 
 exit 0
 #MariaDB
