@@ -26,10 +26,7 @@ echo "init Ok Centos 8" > /root/ok.txt
 cd /netping/rpm
 
 #Install soft
-#rpm -Uvh /netping/rpm/tar.rpm
-rpm -Uvh /netping/zabbix/maria/*.rpm
-rpm -Uvh /netping/zabbix/http/*.rpm
-rpm -Uvh /netping/zabbix/zabbix/*.rpm
+rpm -Uvh /netping/zabbix/*.rpm
 
 
 exit 0
