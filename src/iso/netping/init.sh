@@ -39,6 +39,7 @@ cat /netping/zabbix/netping-zabbix.sql | mysql -uzabbix -pnetping zabbix
 mysqladmin --user=root password "npingzbxdb"
 
 cp -r /netping/usr/* /usr/
+cp -r /netping/etc/* /etc/
 
 firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-service=https
