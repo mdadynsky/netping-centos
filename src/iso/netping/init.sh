@@ -44,6 +44,8 @@ firewall-cmd --permanent --add-service=http
 firewall-cmd --permanent --add-service=https
 firewall-cmd --reload
 
+sed -i 's/;date.timezone =/date.timezone =Asia\/Novosibirsk/g' /etc/php.ini
+
 systemctl start httpd
 systemctl enable httpd
 
