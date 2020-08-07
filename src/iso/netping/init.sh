@@ -50,4 +50,10 @@ sed -i 's/;date.timezone =/date.timezone =Asia\/Novosibirsk/g' /etc/php.ini
 systemctl start httpd
 systemctl enable httpd
 
+systemctl start zabbix-server
+systemctl enable zabbix-server
+
+systemctl start zabbix-agent
+systemctl enable zabbix-agent
+
 exit 0 
