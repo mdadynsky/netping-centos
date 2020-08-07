@@ -31,6 +31,13 @@ rpm -Uvh /netping/zabbix/*.rpm
 systemctl start mariadb
 systemctl enable mariadb
 
+mysql -e "CREATE DATABASE zabbix character set utf8 collate utf8_bin;"
+mysql -e "grant all privileges on zabbix.* to zabbix@localhost identified by 'netping'"
+echo "Import zabbix database"
+cat /netping/zabbix/netping-zabbix.sql | mysql -uzabbix -pnetping zabbix
+
+mysqladmin --user=root password "npingzbxdb"
+
 cp -r /netping/usr/* /usr/
 
 firewall-cmd --permanent --add-service=http
