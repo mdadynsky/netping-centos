@@ -1,16 +1,62 @@
-#init
-URL=http://mirror.corbina.net/pub/Linux/centos/8.2.2004/isos/x86_64/CentOS-8.2.2004-x86_64-minimal.iso
+#/bin/sh
+version=1.0
+echo -e "\e[32m Vestion : $version \e[0m"
 
-ISO1=CentOS-Official.iso
-ISO2=CentOS-NetPing.iso
+#Docer named parameters
+while [ $# -gt 0 ]; do
 
-#Install soft
-dnf install epel-release -y
-dnf install ntfs-3g -y
-dnf install wget -y
-dnf install rsync -y
-dnf install genisoimage -y
+   if [[ $1 == *"--"* ]]; then
+        param="${1/--/}"
+        declare $param="$2"
+        echo $1 $2
+   fi
 
+  shift
+done
+
+#Install git
+#dnf install git> /dev/null 2>&1
+
+echo "Download: $repo"
+rm -Rf ./conf
+git clone $repo ./conf/
+#> /dev/null 2>&1
+echo "Done"
+
+conf="./conf/$conf"
+
+if [ ! -f "$conf" ]
+then
+	echo "Conf file $conf not found."
+	exit;
+fi	
+
+
+if [  -f "$conf" ]
+then
+  echo "Getting parameters from conf file: $conf."
+
+  while IFS='=' read -r key value
+  do
+    key=$(echo $key | tr '.' '_')
+    eval ${key}=\${value}> /dev/null 2>&1
+  done < "$conf"
+
+  echo "ISO1 = " ${ISO1}
+  echo "ISO2 = " ${ISO2}
+  echo "ISO_ROOT" = ${iso_root}
+else
+  echo "$conf not found."
+fi
+
+
+echo "Install soft"
+dnf install epel-release -y> /dev/null 2>&1
+dnf install ntfs-3g -y> /dev/null 2>&1
+dnf install wget -y> /dev/null 2>&1
+dnf install rsync -y> /dev/null 2>&1
+dnf install genisoimage -y> /dev/null 2>&1
+echo "Done"
 #Download linux
 if [ ! -f "$ISO1" ]; then
     echo "$ISO1 does not exists. Dowload..."
@@ -28,22 +74,26 @@ mkdir $BUILD/
 
 shopt -s dotglob
 
-cp -avRf /mnt/* $BUILD/
+echo "Uncompress $ISO1"
+cp -aRf /mnt/* $BUILD/
 umount /mnt/
+echo "Done"
 
 
 #Copy settings
-rsync -avh src/iso/* iso/
-
-wget -O $BUILD/netping/rpm/tar.rpm http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/tar-1.30-4.el8.x86_64.rpm
+echo "Copy settinds"
+rsync -ah ./conf${iso_root}* iso/
+echo "Done"
 
 VOLUME=$(isoinfo -d -i $ISO1 | grep "Volume id" | sed -e 's/Volume id: //')
 
 echo $VOLUME
  
 sed -i 's/{{VOLUME}}/'$VOLUME'/' $BUILD/isolinux/isolinux.cfg
-
-mkisofs -J -T -o $ISO2 -b isolinux/isolinux.bin \
+echo "Build new ISO : $ISO2"
+mkisofs -quiet -J -T -o $ISO2 -b isolinux/isolinux.bin \
 -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table \
 -R -m TRANS.TBL -graft-points -V "$VOLUME" \
 $BUILD
+echo "Done"
+echo -e "\e[32m Finish\e[0m"
