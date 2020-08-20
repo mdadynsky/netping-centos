@@ -49,6 +49,12 @@ else
   echo "$conf not found."
 fi
 
+echo $ISO_MASK
+
+ISO1=$(curl $ISO_URL | awk '/"'$ISO_MASK'"/{print $0}' | awk -F"<" '{print $2}' | awk -F">" '{print $2}')
+URL=$ISO_URL$ISO1
+
+echo "Last ISO version "$URL
 
 echo "Install soft"
 dnf install epel-release -y> /dev/null 2>&1
